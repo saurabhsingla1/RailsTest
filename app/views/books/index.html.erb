@@ -1,0 +1,69 @@
+<%- model_class = Book -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+
+
+
+<%= form_tag books_path, :method => 'get', :id => "books_search" do %>
+  <p>
+    <%= label_tag 'Title' %> <%= text_field_tag :search, params[:search] %>
+    
+    <%= submit_tag "Search", :name => nil %>
+  </p>
+  
+<% end %>
+
+<div class="row">
+
+<% if @books.nil? %>
+
+  No books found
+
+<% else %>
+
+  <% @books.each do |book| %>
+
+      <div class="col-sm-6 col-md-2">
+        <div class="thumbnail">
+
+          <% if !book.avatar.present? %>
+            <%= image_tag("default_img.jpg", :alt => "default", :width => 190, :height => 100) %>
+          <% else %>
+            <%= image_tag(book.avatar, :alt => "avatar", :width => 180, :height => 90) %>
+          <% end %>
+          <div class="caption">
+            <h3><%= link_to book.title, book_path(book) %></h3>
+            
+              <p> Author: <%= book.name %> </p>
+
+              <% if current_user.id == book.created_by %>
+
+                <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                            edit_book_path(book), :class => 'btn btn-default btn-xs' %>
+                <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                          book_path(book),
+                          :method => :delete,
+                          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                          :class => 'btn btn-xs btn-danger' %>
+              <% end %>
+
+              <% if book.created_by? %>
+              <% user = User.find(book.created_by) %>
+              <p> Contact: <%= user.username %> at <%= user.email %> or <%= user.contact_number_1 %> </p>
+              <% end %>
+          </div>
+        </div>
+      </div>
+    
+  <% end %>
+<% end %>
+
+</div>
+<%= will_paginate @books %>
+
+<p>
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_book_path,
+            :class => 'btn btn-primary' %>
+</p>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RailsTest2</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+
+<%= nav_bar responsive: true , brand: "Books Cafe" do %>
+
+	<%= menu_group do %>
+		<%= menu_text "We are awesome" %>
+		<%= menu_item "Home", root_path %>
+
+        <% if user_signed_in? %>
+	        <%= menu_item "Log Out", destroy_user_session_path,  :method => :delete %>
+		        <%= menu_text "Welcome " + current_user.email %>
+	    <% else %>
+	        <%= menu_group pull: :right do %>
+	            <%= menu_item "Sign In", new_user_session_path %>
+
+	        <% end %>
+    	<% end %>
+    <% end %>
+<% end %>
+<div class="container">
+<%= yield %>
+</div>
+</body>
+</html>
