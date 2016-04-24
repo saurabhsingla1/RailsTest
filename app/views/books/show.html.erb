@@ -1,7 +1,11 @@
 <%- model_class = Book -%>
-<div class="page-header">
+<!-- <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div> -->
+<div class="row">
+<div class="col-md-1">
 </div>
+<div class="col-md-7">
 
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:title) %>:</strong></dt>
@@ -12,10 +16,18 @@
   <dd><%= @book.offer_price %></dd>
   <dt><strong><%= model_class.human_attribute_name(:isdn) %>:</strong></dt>
   <dd><%= @book.isdn %></dd>
+  <dt><strong>Contact:</strong></dt>
+  <dd><%= @book.created_by.username %></dd>
+  <dt><strong>Email:</strong></dt>
+  <dd><%= @book.created_by.email %></dd>
+  <dt><strong>Phone:</strong></dt>
+  <dd><%= @book.created_by.contact_number_1 %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
               books_path, :class => 'btn btn-default'  %>
+
+<% if current_user == @book.created_by %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_book_path(@book), :class => 'btn btn-default' %>
 <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
@@ -23,3 +35,15 @@
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
+
+<% end %>
+</div>
+<div class="col-md-4">
+<% if !@book.avatar.present? %>
+            <%= image_tag("default_img.jpg", :alt => "default") %>
+          <% else %>
+            <%= image_tag(@book.avatar, :alt => "avatar", :width => 180, :height => 90) %>
+          <% end %>
+
+  </div>
+</div>
